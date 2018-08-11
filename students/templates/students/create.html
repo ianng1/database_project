@@ -1,0 +1,25 @@
+<h1>Create a Student</h1>
+<form method = "POST" action = "{% url 'create' %}" enctype = "multipart/form-data">
+{% csrf_token %}
+First Name:
+<br />
+<input type="text" name = "first name" />
+<br />
+
+Last Name:
+<br />
+<input type="text" name = "last name" />
+<br />
+
+Birthday:
+<br />
+<input type="date" name = "birthday" />
+<br />
+
+Email:
+<br />
+<input type="email" name = "email" />
+<br />
+<br />
+<input class="btn btn-primary" type = "submit" value = "Add Student"/>
+</form>
