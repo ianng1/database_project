@@ -1,3 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<!doctype html>
+
+    <main role="main" class="container">
 <h1>Create a Student</h1>
 <form method = "POST" action = "{% url 'create' %}" enctype = "multipart/form-data">
 {% csrf_token %}
@@ -11,15 +16,53 @@ Last Name:
 <input type="text" name = "last name" />
 <br />
 
+Parent First Name:
+<br />
+<input type="text" name = "parent first name" />
+<br />
+
+Parent Last Name:
+<br />
+<input type="text" name = "parent last name" />
+<br />
+
 Birthday:
 <br />
 <input type="date" name = "birthday" />
 <br />
 
-Email:
+Student Email:
 <br />
 <input type="email" name = "email" />
 <br />
+
+Student Phone Number:
+<br />
+<input type="text" name = "phone number" />
+<br />
+
+Parent Email:
+<br />
+<input type="email" name = " parent email" />
+<br />
+
+Parent Phone Number:
+<br />
+<input type="text" name = "parent phone number" />
+<br />
+
+Instrument:
+<br />
+<input type="text" name = "instrument" />
+<br />
+
+Teacher:
+<br />
+<input type="text" name = "teacher" />
+<br />
+
 <br />
 <input class="btn btn-primary" type = "submit" value = "Add Student"/>
 </form>
+</main>
+{% endblock %}
