@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Student
 from django.contrib.auth.decorators import login_required
 
@@ -22,6 +22,7 @@ def create(request):
             student.parent_phone_number = request.POST['parent phone number']
             student.instrument = request.POST['instrument']
             student.teacher = request.POST['teacher']
+            student.full_name = student.first_name + " " + student.last_name
             student.save()
             print("reached")
             return redirect('create')
@@ -37,9 +38,18 @@ def home(request):
     if request.method == 'POST':
         if request.POST['namequery']:
             searchname = request.POST['namequery']
-            students = Student.objects.filter(first_name=searchname)
-            return render(request, 'students/home.html')
+            students_first_name = Student.objects.filter(first_name__icontains=searchname)
+            students_last_name = Student.objects.filter(last_name__icontains=searchname)
+
+            return render(request, 'students/home.html', {'students_first_name': students_first_name, 'students_last_name': students_last_name})
         else:
             return render(request, 'students/home.html')
     else:
         return render(request, 'students/home.html')
+
+
+
+@login_required
+def data(request, student_id):
+    student = get_object_or_404(Student, pk=student_id)
+    return render(request, 'students/data.html', {'student': student})

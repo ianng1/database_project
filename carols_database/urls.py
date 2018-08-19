@@ -15,10 +15,11 @@ urlpatterns = [
     path('', students.views.home, name='home'),
     path('accounts/', include('django.contrib.auth.urls')),
     path('students/', include('students.urls')),
-    path('login/', views.login, name='login'),
+    path('login/', auth_views.login, name='login'),
     path('logout/', auth_views.logout, name='logout'),
     path('create/', students.views.create, name='create'),
     path('home/', students.views.home, name='home'),
+    path('data/<int:student_id>', students.views.data, name='data'),
 
 
 
