@@ -1,86 +1,434 @@
 {% extends 'base.html' %}
 {% block content %}
 <!doctype html>
+<script>
+$(document).ready(function(){
+  if($("#edit").val() == "Cancel"){
+    $("#save").removeAttr("hidden");
+  }
+  else{
+  $("#save").attr("hidden", "hidden");
+}
 
+$('#edit').on('click',function(){
+  refreshform();
+  if($(".form-control").attr("disabled") == "disabled"){
+    $(".form-control").removeAttr("disabled");
+    $("#edit").val("Cancel");
+    $("#save").removeAttr("hidden");
+  }
+  else{
+    $(".form-control").attr("disabled", "disabled");
+    $("#edit").val("Edit");
+    $("#save").attr("hidden", "hidden");
+  }
+});
+
+$("#student, #save").submit(function(event){
+  var formData = {
+    'ID'        : $('#ID').val(),
+    'first name' : $('#firstname').val(),
+    'last name'  : $('#lastname').val(),
+    'parent first name' : $('#parentfirstname').val(),
+    'parent last name'  : $('#parentlastname').val(),
+    'birthday' : $('#birthday').val(),
+    'email'     : $('#email1').val(),
+    'parent email'    : $('#email2').val(),
+    'phone number'    : $('#phone1').val(),
+    'parent phone number'    : $('#phone2').val(),
+    'level'     : $('#level').val(),
+    'school'     : $('#school').val(),
+    'street'     : $('#street').val(),
+    'street2'     : $('#street2').val(),
+    'city'     : $('#city').val(),
+    'zipcode'     : $('#zipcode').val(),
+    'comment'     : $('#comment').val(),
+  };
+  ajaxSetup();
+
+  $.ajax({
+    type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+    url         : '{% url 'create' %}', // the url where we want to POST
+    data        : formData, // our data object
+    dataType    : 'json', // what type of data do we expect back from the server
+    encode       : true,
+    success: function (data) {
+       if (data) {
+         refreshform();
+         $(".form-control").attr("disabled", "disabled");
+         $("#edit").val("Edit");
+         $("#save").attr("hidden", "hidden");
+       }},
+  });
+  event.preventDefault();
+});
+
+$("#studentinstruments, #delitem").submit(function(event){
+  var formData = {
+    'studentinstrument_id'        : $('#studentinstrument_id').val(),
+    'student_id'                  : $('#student_id').val(),
+  };
+  ajaxSetup();
+  $.ajax({
+    type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+    url         : '{% url 'delitem' %}', // the url where we want to POST
+    data        : formData, // our data object
+    dataType    : 'json', // what type of data do we expect back from the server
+    encode       : true,
+    success: function (data) {
+       if (data) {
+         refreshform();
+       }},
+  });
+  event.preventDefault();
+})
+
+$("#addinstrument, #additem").submit(function(event){
+
+  var formData = {
+    'student_id'        : $('#student_id').val(),
+    'teacher' : $('#teacher').val(),
+    'instrument' : $('#instrument').val(),
+  };
+  ajaxSetup();
+  $.ajax({
+    type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+    url         : '{% url 'additem' %}', // the url where we want to POST
+    data        : formData, // our data object
+    dataType    : 'json', // what type of data do we expect back from the server
+    encode       : true,
+    success: function (data) {
+       if (data) {
+         refreshform();
+       }},
+  });
+
+    event.preventDefault();
+})
+})
+
+function refreshform(){
+  var formData = {
+    'ID'        : $('#ID').val(),
+  };
+  ajaxSetup();
+
+  $.ajax({
+    type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+    url         : '{% url 'refresh' %}', // the url where we want to POST
+    data        : formData, // our data object
+    dataType    : 'json', // what type of data do we expect back from the server
+    encode       : true,
+
+    success: function (data) {
+       if (data) {
+         var jsonparsed = JSON.parse(data[0].student)[0].fields;
+         $('#firstname').val(jsonparsed.first_name);
+         $('#lastname').val(jsonparsed.last_name);
+         $('#birthday').val(jsonparsed.birthday);
+         $('#parentfirstname').val(jsonparsed.parent_first_name);
+         $('#parentlastname').val(jsonparsed.parent_last_name);
+         $('#email1').val(jsonparsed.email);
+         $('#email2').val(jsonparsed.parent_email);
+         $('#phone1').val(jsonparsed.phone_number);
+         $('#phone2').val(jsonparsed.parent_phone_number);
+         $('#level').val(jsonparsed.level);
+         $('#school').val(jsonparsed.school);
+         $('#street').val(jsonparsed.street);
+         $('#street2').val(jsonparsed.street2);
+         $('#city').val(jsonparsed.city);
+         $('#zipcode').val(jsonparsed.zipcode);
+         $('#comment').val(jsonparsed.comment);
+
+         var studentinstrument = data[0].studentinstrumentlist;
+         var jsonparsedteacher = JSON.parse(data[0].teachers);
+         var jsonparsedinstrument = JSON.parse(data[0].instrument);
+         var i;
+         var str;
+
+         $('#studentinstruments').empty();
+         for(i = 0; i < studentinstrument.length; i++ ){
+           str = '<tr><td>' + studentinstrument[i].instrument + '</td>';
+           str += '<td>' + studentinstrument[i].teacher_name + '</td>';
+           str += '<td><form action=/students/delitem method="POST" enctype="multipart/form-data" >'
+           str += '<input type="hidden" name="studentinstrument_id" id="studentinstrument_id" value="'+ studentinstrument[i].studentinstrument_id + '" />'
+           str += '<input type="hidden" name="student_id" value=" id="student_id"' + studentinstrument[i].student_id + '" />'
+           str += '<input class="btn btn-sm btn-outline-secondary" id="delete" type="submit" value="Delete">'
+           str += '</form></td><tr>'
+         $('#studentinstruments').append(str);
+
+         $("#addinstrument, #additem, #instrument").val("");
+         $("#addinstrument, #additem, #teacher").val("");
+         }
+       }},
+  });
+}
+
+function ajaxSetup(){
+  $.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+      function getCookie(name) {
+        var cookieValue = null;
+        if (document.cookie && document.cookie != '') {
+          var cookies = document.cookie.split(';');
+          for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+      if (!(/^http:.*/.test(settings.url) || /^https:.*/.test(settings.url))) {
+        // Only send the token to relative URLs i.e. locally.
+        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+      }
+    }
+  });
+}
+</script>
 {{student_id}}
- <h1>Student data for: {{student.last_name}}, {{student.first_name}} </h1>
+ <h2 class="my-2">Student data for {{student.last_name}}, {{student.first_name}} </h2>
+
+ <main role="main" class="container">
 
 
-First Name:
+<form class="needs-validation" novalidate id="student" method = "POST" action = "{% url 'create' %}" enctype = "multipart/form-data">
+{% csrf_token %}
+
+<input type="text" name="ID" id="ID" value="{{ student.id }}" hidden/>
+
 <div class="row">
-  <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="first_name" value="{{ student.first_name }}"/>
+  <div class="col-md-6 mb-3">
+    <label class="my-0 h-25" for="firstName">First name</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="firstname" name="first name" placeholder="" value="{{ student.first_name }}" required disabled>
+    <div class="invalid-feedback">
+      Valid first name is required.
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="lastName">Last name</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="lastname" name="last name" placeholder="" value="{{ student.last_name }}" required disabled>
+    <div class="invalid-feedback">
+      Valid last name is required.
+    </div>
   </div>
 </div>
 
-Last Name:
+
 <div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="school">School</label>
+    <input class="form-control form-control-sm" type="text" maxlength="35" id="school" name="school" value="{{ student.school }}" disabled/>
+  </div>
   <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="first_name" value="{{ student.last_name }}"/>
+    <label class="my-0" for="birthdate">Birthday</label>
+    <input class="form-control form-control-sm" type="date" id="birthday" name="birthday" value="{{ student.birthday|date:'Y-m-d' }}" required disabled/>
+    <div class="invalid-feedback">
+      Birthday is required.
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+  <label class="my-0" for="level">CM Level</label>
+    <select class="form-control form-control-sm" type="text" id="level" name="level" value = "{{student.level}}" disabled>
+        <option value="{{student.level}}" >{{student.level}}</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="0">Other / None</option>
+    </select>
   </div>
 </div>
 
-Student Email:
+
 <div class="row">
-  <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="email" value="{{ student.email }}"/>
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="firstName">Parent First Name</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="parentfirstname" name="parent first name" placeholder="" value="{{ student.parent_first_name }}" disabled>
+    <div class="invalid-feedback">
+      Valid first name is required.
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="lastName">Parent Last Name</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="parentlastname" name="parent last name" placeholder="" value="{{ student.parent_last_name }}" disabled>
+    <div class="invalid-feedback">
+      Valid last name is required.
+    </div>
   </div>
 </div>
 
-Parent First Name
 <div class="row">
-  <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="parent_first_name" value="{{ student.parent_first_name }}"/>
+  <div class="col-md-6 mb-3">
+    <label class="my-0 h-25" for="street">Address / Street</label>
+    <input type="text" maxlength="70" class="form-control form-control-sm" id="street" name="street" placeholder="" value="{{ student.street }}" disabled>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="street2">Address 2nd Line</label>
+    <input type="text" maxlength="70" class="form-control form-control-sm" id="street2" name="street2" placeholder="" value="{{ student.street2 }}" disabled>
   </div>
 </div>
 
-Parent Last Name
 <div class="row">
   <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="parent_last_name" value="{{ student.parent_last_name }}"/>
+    <label class="my-0 h-25" for="city">City</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="city" name="scity" placeholder="" value="{{ student.city }}" disabled>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <label class="my-0" for="zipcode">Zip Code</label>
+    <input type="text" maxlength="10" class="form-control form-control-sm" id="zipcode" name="zipcode" placeholder="" value="{{ student.zipcode }}" disabled>
   </div>
 </div>
 
-Parent Email
 <div class="row">
-  <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="parent_email" value="{{ student.parent_email }}"/>
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="email1">Email</label>
+    <input type="text" class="form-control form-control-sm" id="email1" name="email" placeholder="you@example.com" value="{{ student.email }}" required disabled>
+    <div class="invalid-feedback">
+      Email is required.
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="phone1">Phone</label>
+    <input type="text" maxlength="25" class="form-control form-control-sm" id="phone1" name="phone number" placeholder="" value="{{ student.phone_number }}" required disabled>
+    <div class="invalid-feedback">
+      Phone number is required.
+    </div>
   </div>
 </div>
 
-Student Phone Number
+
 <div class="row">
-  <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="phone_number" value="{{ student.phone_number }}"/>
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="email2">Secondary Email</label>
+    <input type="text" class="form-control form-control-sm" id="email2" name="parent email" placeholder="you@example.com" value="{{ student.parent_email }}" disabled>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="phone2">Secondary Phone</label>
+    <input type="text" maxlength="25" class="form-control form-control-sm" id="phone2" name="parent phone number" placeholder="" value="{{ student.parent_phone_number }}" disabled>
   </div>
 </div>
 
-Parent Phone Number
-<div class="row">
-  <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="parent_phone_number" value="{{ student.parent_phone_number }}"/>
-  </div>
+<div class="">
+  <label class="my-0" for="comment">Comment</label>
+  <textarea rows="4" cols="50" class="form-control form-control-sm" id="comment" name="comment" disabled>{{ student.comment }}</textarea>
 </div>
 
-Birthday
-<div class="row">
-  <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="birthday" value="{{ student.birthday }}"/>
-  </div>
-</div>
-
-Instrument
-<div class="row">
-  <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="instrument" value="{{ student.instrument }}"/>
-  </div>
-</div>
-
-Teacher
 
 <div class="row">
-  <div class="col-md-3 mb-3">
-  <input class="form-control" type="text" id="ID" name="teacher" value="{{ student.teacher}}"/>
-  </div>
+
 </div>
+<input class="btn btn-primary my-2" id="save" type = "submit" value = "Save" hidden/>
+<input class="btn btn-primary my-2" id="edit" type = "button" value = "Edit"/>
+</form>
+
+<br />
+<div class="table-responsive">
+   <table class="table table-sm">
+     <thead>
+       <tr>
+         <th>Instrument</th>
+         <th>Instructor</th>
+         <th>Action</th>
+        </tr>
+     </thead>
+
+     <tbody id="studentinstruments">
+
+     {% if studentinstruments %}
+     {% for studentinstrument in studentinstruments %}
+       <tr>
+         <td> {{studentinstrument.instrument.instrument}} </td>
+         <td> {{studentinstrument.teacher.name}} </td>
+         <td>
+           <form action={% url 'delitem' %} method="POST" enctype="multipart/form-data" >
+             {% csrf_token %}
+             <input type="hidden" name="studentinstrument_id" id="studentinstrument_id" value="{{studentinstrument.id}}" />
+             <input type="hidden" name="student_id" id="student_id" value="{{studentinstrument.student.id}}" />
+             <input class="btn btn-sm btn-outline-secondary" id="delitem" type="submit" value="Delete">
+           </form>
+         </td>
+        </tr>
+     {%endfor%}
+     {%endif%}
+
+    <tbody id="addinstrument">
+    </tbody>
+
+     <form class="needs-validation" method="POST" action={% url 'additem' %} id="additem">
+       {% csrf_token %}
+     <tr>
+       <td>
+         <select class="custom-select d-block w-100" name="instrument" id="instrument" required>
+           <option value="">Choose...</option>
+           {% for instrument in instrument_name %}
+           <option value = "{{instrument.id}}">{{instrument.instrument}}</option>
+           {% endfor %}
+        </select>
+        <div class="invalid-feedback">
+          Please select instrument.
+        </div>
+      </td>
+
+        <td>
+        <select class="custom-select d-block w-100" name="teacher" id="teacher" required>
+          <option value="">Choose...</option>
+          {% for teacher in teacher_name %}
+          <option value = "{{teacher.id}}">{{teacher.name}}</option>
+          {% endfor %}
+          <div class="invalid-feedback">
+            Please select teacher.
+          </div>
+        </select>
+
+      </td>
+
+      <td>
+          <input type="hidden" name="student_id" value="{{student.id}}" id="student_id"/>
+          <input class="btn btn-sm btn-outline-secondary" id="add" type="submit" value="Add">
+      </td>
+    </tr>
+    </form>
+
+ </tbody>
+   </table>
+</div>
+
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
+</main>
 {% endblock %}

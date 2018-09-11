@@ -3,27 +3,28 @@
 
 <!doctype html>
 <html lang="en">
-
+  <section class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
 
   <body class="text-center">
     <form class="form-signin" method="post" action="{% url 'login' %}">
         {% csrf_token %}
-      <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+      <h3 class="h5 mb-3 font-weight-normal">Please sign in</h3>
 
-      <div class="h3 mb-3 font-weight-normal">
+      <div class="h5 mb-3 font-weight-normal">
         <td class="form-control">{{ form.username.label_tag }}</td>
         <td class="form-control" >{{ form.username }}</td>
         </div>
 
 
-      <div class="h3 mb-3 font-weight-normal">
+      <div class="h5 mb-3 font-weight-normal">
         <td class="form-control">{{ form.password.label_tag }}</td>
         <td class="form-control">{{ form.password }}</td>
       </div>
-      <button class="h3 mb-3 font-weight-normal" type="submit" value="login">Sign in</button>
+      <button class="h5 mb-3 font-weight-normal" type="submit" value="login">Sign in</button>
       <input type="hidden" name="next" value="{{ next }}" />
       <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
     </form>
   </body>
+</section>
 </html>
 {% endblock %}

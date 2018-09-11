@@ -23,5 +23,4 @@ urlpatterns = [
     path('detail', students.views.data, name = 'detail'),
     path('students/delitem', students.views.delitem, name='delitem'),
     path('students/additem', students.views.additem, name='additem'),
-    path('refresh', students.views.refresh, name='refresh'),
 ]

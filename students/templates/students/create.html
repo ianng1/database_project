@@ -3,66 +3,224 @@
 <!doctype html>
 
     <main role="main" class="container">
-<h1>Create a Student</h1>
-<form method = "POST" action = "{% url 'create' %}" enctype = "multipart/form-data">
+<h1>Create Student</h1>
+<form class="needs-validation" novalidate method = "POST" action = "{% url 'create' %}" enctype = "multipart/form-data">
 {% csrf_token %}
-First Name:
-<br />
-<input type="text" name = "first name" />
-<br />
+<input type="text" name="ID" value= "" hidden/>
 
-Last Name:
-<br />
-<input type="text" name = "last name" />
-<br />
 
-Parent First Name:
-<br />
-<input type="text" name = "parent first name" />
-<br />
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="my-0 h-25" for="firstName">First name</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="firstname" name="first name" placeholder="" value="" required>
+    <div class="invalid-feedback">
+      Valid first name is required.
+    </div>
+  </div>
 
-Parent Last Name:
-<br />
-<input type="text" name = "parent last name" />
-<br />
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="lastName">Last name</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="lastname" name="last name" placeholder="" value="" required>
+    <div class="invalid-feedback">
+      Valid last name is required.
+    </div>
+  </div>
+</div>
 
-Birthday:
-<br />
-<input type="date" name = "birthday" />
-<br />
 
-Student Email:
-<br />
-<input type="email" name = "email" />
-<br />
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="school">School</label>
+    <input class="form-control form-control-sm" type="text" maxlength="35" id="school" name="school" value="" />
+  </div>
+  <div class="col-md-3 mb-3">
+    <label class="my-0" for="birthdate">Birthday</label>
+    <input class="form-control form-control-sm" type="date" id="birthday" name="birthday" value="" required/>
+    <div class="invalid-feedback">
+      Birthday is required.
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+  <label class="my-0" for="level">CM Level</label>
+    <select class="form-control form-control-sm" type="text" id="level" name="level" value = "" >
+        <option value="{{student.level}}" >{{student.level}}</option>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+        <option value="0">Other / None</option>
+    </select>
+  </div>
+</div>
 
-Student Phone Number:
-<br />
-<input type="text" name = "phone number" />
-<br />
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="firstName">Parent First Name</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="parentfirstname" name="parent first name" placeholder="" value="">
+    <div class="invalid-feedback">
+      Valid first name is required.
+    </div>
+  </div>
 
-Parent Email:
-<br />
-<input type="email" name = " parent email" />
-<br />
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="lastName">Parent Last Name</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="parentlastname" name="parent last name" placeholder="" value="">
+    <div class="invalid-feedback">
+      Valid last name is required.
+    </div>
+  </div>
+</div>
 
-Parent Phone Number:
-<br />
-<input type="text" name = "parent phone number" />
-<br />
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="my-0 h-25" for="street">Address / Street</label>
+    <input type="text" maxlength="70" class="form-control form-control-sm" id="street" name="street" placeholder="" value="">
+  </div>
 
-Instrument:
-<br />
-<input type="text" name = "instrument" />
-<br />
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="street2">Address 2nd Line</label>
+    <input type="text" maxlength="70" class="form-control form-control-sm" id="street2" name="street2" placeholder="" value="">
+  </div>
+</div>
 
-Teacher:
-<br />
-<input type="text" name = "teacher" />
-<br />
+<div class="row">
+  <div class="col-md-3 mb-3">
+    <label class="my-0 h-25" for="city">City</label>
+    <input type="text" maxlength="35" class="form-control form-control-sm" id="city" name="city" placeholder="" value="">
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <label class="my-0" for="zipcode">Zip Code</label>
+    <input type="text" maxlength="10" class="form-control form-control-sm" id="zipcode" name="zipcode" placeholder="" value="">
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="email1">Email</label>
+    <input type="text" class="form-control form-control-sm" id="email1" name="email" placeholder="you@example.com" value="" required>
+    <div class="invalid-feedback">
+      Email is required.
+    </div>
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="phone1">Phone</label>
+    <input type="text" maxlength="25" class="form-control form-control-sm" id="phone1" name="phone number" placeholder="" value="" required>
+    <div class="invalid-feedback">
+      Phone number is required.
+    </div>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="email2">Secondary Email</label>
+    <input type="text" class="form-control form-control-sm" id="email2" name="parent email" placeholder="you@example.com" value="{{ student.parent_email }}">
+  </div>
+
+  <div class="col-md-6 mb-3">
+    <label class="my-0" for="phone2">Secondary Phone</label>
+    <input type="text" maxlength="25" class="form-control form-control-sm" id="phone2" name="parent phone number" placeholder="" value="{{ student.parent_phone_number }}">
+  </div>
+</div>
+
+<div class="">
+  <label class="my-0" for="comment">Comment</label>
+  <textarea rows="4" cols="50" class="form-control form-control-sm" id="comment" name="comment"></textarea>
+</div>
 
 <br />
-<input class="btn btn-primary" type = "submit" value = "Add Student"/>
+<input class="btn btn-primary" type = "submit" value = "Save"/>
 </form>
+
+<br />
+<div class="table-responsive">
+   <table class="table table-striped table-sm">
+     <thead>
+       <tr>
+         <th>Instrument</th>
+         <th>Instructor</th>
+         <th>Action</th>
+        </tr>
+     </thead>
+
+     <tbody>
+
+     {% if studentinstruments %}
+     {% for studentinstrument in studentinstruments %}
+       <tr>
+         <td> {{studentinstrument.instrument.instrument}} </td>
+         <td> {{studentinstrument.teacher.name}} </td>
+         <td>
+           <form action={% url 'delitem' %} method="POST" enctype="multipart/form-data">
+             {% csrf_token %}
+             <input type="hidden" name="studentinstrument_id" value="{{studentinstrument.id}}" />
+             <input type="hidden" name="student_id" value="{{studentinstrument.student.id}}" />
+             <input class="btn btn-sm btn-outline-secondary" type="submit" value="Delete">
+           </form>
+         </td>
+        </tr>
+     {%endfor%}
+     {%endif%}
+
+     <form action={% url 'additem' %} method="POST">
+       {% csrf_token %}
+     <tr>
+       <td>
+         <select class="custom-select d-block w-100" name="instrument" id="instrument">
+           <option value="">Choose...</option>
+           {% for instrument in instrument_name %}
+           <option value = "{{instrument.instrument}}">{{instrument.instrument}}</option>
+           {% endfor %}
+        </select>
+      </td>
+
+        <td>
+        <select class="custom-select d-block w-100" name="teacher" id="teacher">
+          <option value="">Choose...</option>
+          {% for teacher in teacher_name %}
+          <option value = "{{teacher.name}}">{{teacher.name}}</option>
+          {% endfor %}
+        </select>
+      </td>
+
+      <td>
+          <input type="hidden" name="student_id" value="{{student.id}}" />
+          <input class="btn btn-sm btn-outline-secondary" type="submit" value="Add">
+      </td>
+    </tr>
+    </form>
+
+ </tbody>
+   </table>
+
 </main>
+
+<script>
+// Example starter JavaScript for disabling form submissions if there are invalid fields
+(function() {
+  'use strict';
+  window.addEventListener('load', function() {
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    var forms = document.getElementsByClassName('needs-validation');
+    // Loop over them and prevent submission
+    var validation = Array.prototype.filter.call(forms, function(form) {
+      form.addEventListener('submit', function(event) {
+        if (form.checkValidity() === false) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+        form.classList.add('was-validated');
+      }, false);
+    });
+  }, false);
+})();
+</script>
 {% endblock %}
