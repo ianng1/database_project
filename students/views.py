@@ -53,16 +53,31 @@ def create(request):
 
 @login_required
 def home(request):
+    teachers = Teacher.objects.all().order_by('name')
+    instruments = Instrument.objects.all().order_by('instrument')
     if request.method == 'POST':
-        if request.POST['namequery']:
+        if request.POST['namequery'] or request.POST['parent'] or request.POST['instrument'] or request.POST['instructor']:
             searchname = request.POST['namequery']
-            students_name = Student.objects.filter(full_name__icontains=searchname)
+            parent = request.POST['parent']
 
-            return render(request, 'students/home.html', {'students_name': students_name, 'searchfired': True})
+            if request.POST['instrument'] or request.POST['instructor']:
+                studentInstruments = StudentInstrument.objects.all()
+                if request.POST['instrument']:
+                    instrumentObj = get_object_or_404(Instrument, pk=request.POST['instrument'])
+                    if instrumentObj:
+                        studentInstruments = studentInstruments.filter(instrument=instrumentObj)
+                if request.POST['instructor']:
+                    teacherObj = get_object_or_404(Teacher, pk=request.POST['instructor'])
+                    if teacherObj:
+                        studentInstruments = studentInstruments.filter(teacher=teacherObj)
+                students_name = Student.objects.filter(pk__in=studentInstruments.values('student'), full_name__icontains=searchname, parent_full_name__icontains=parent)
+            else:
+                students_name = Student.objects.filter(full_name__icontains=searchname, parent_full_name__icontains=parent)
+            return render(request, 'students/home.html', {'students_name': students_name, 'searchfired': True, 'teachers': teachers, 'instruments': instruments})
         else:
-            return render(request, 'students/home.html')
+            return render(request, 'students/home.html', {'teachers': teachers, 'instruments': instruments})
     else:
-        return render(request, 'students/home.html')
+        return render(request, 'students/home.html', {'teachers': teachers, 'instruments': instruments })
 
 
 
@@ -96,8 +111,8 @@ def data(request, student_id):
             student.full_name = student.first_name + " " + student.last_name
             student.parent_full_name = student.parent_first_name + " " + student.parent_last_name
             student.save()
-    teachers = Teacher.objects.all()
-    instruments = Instrument.objects.all()
+    teachers = Teacher.objects.all().order_by('name')
+    instruments = Instrument.objects.all().order_by('instrument')
 
     return render(request, 'students/data.html', {'student': student, 'teacher_name': teachers, 'instrument_name': instruments, 'studentinstruments': studentinstruments})
 
@@ -106,8 +121,8 @@ def data(request, student_id):
 def refresh(request):
     student = Student.objects.filter(pk = request.POST['ID'])
     studentinstrument = StudentInstrument.objects.filter(student_id = request.POST['ID'])
-    teachers = Teacher.objects.all()
-    instruments = Instrument.objects.all()
+    teachers = Teacher.objects.all().order_by('name')
+    instruments = Instrument.objects.all().order_by('instrument')
     studentinstrumentlist = []
     for i in studentinstrument:
         fields = {}

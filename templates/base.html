@@ -13,6 +13,8 @@
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
   </head>
 
   <body>
@@ -33,7 +35,10 @@
         <a class="nav-link" href="../create">Create student<span class="sr-only">(current)</span></a>
       </li>
     </ul>
-    <a class="btn btn-outline-secondary" href="/admin">Admin</a>
+    <nav class="my-2 my-md-0 mr-md-3">
+      <a class="p-2" href="../admin">Admin</a>
+    </nav>
+    <!-- <a class="btn btn-outline-secondary" href="/admin">Admin</a> -->
     <a class="btn btn-outline-primary" href="/accounts/logout/">Log Out</a>
     {%endif%}
   </div>

@@ -5,16 +5,57 @@
 <body>
     <main role="main" class="container">
       <div class="container">
-        <h1 class="jumbotron-heading">Search Name</h1>
+        <h1 class="jumbotron-heading">Search Student Name</h1>
       </div>
 
       <form method = "POST" action = "{% url 'home' %}" enctype = "multipart/form-data">
       {% csrf_token %}
 
       <br />
-      <input class="form-control form-control-dark w-100" type="text" name = "namequery" placeholder="Type and press enter"/>
+      <input class="form-control form-control-dark w-100" type="text" name = "namequery" autocomplete="off"/>
       <br />
+        <input class="btn btn-primary my-2" type="submit" value="Search">
+        <button class="btn btn-secondary my-2" type="button" data-toggle="collapse" data-target="#advancesearch" aria-expanded="false" aria-controls="dvancesearch">
+          More Search Options
+        </button>
+        <div class="collapse" id="advancesearch">
+          <div class="card card-body">
+            <table class="table table-borderless">
+              <tr>
+                <div class="">
+                  <label class="my-0" for="parent">Parent Name</label>
+                  <input class="form-control form-control-sm" type="text" id="parent" name="parent" autocomplete="off"/>
+                  <br>
+                </div>
+              </tr>
+              <tr>
+                <td>
+            <select class="custom-select d-block w-100" name="instrument" id="instrument">
+              <option value="">Select Instrument</option>
+              {% for instrument in instruments %}
+              <option value = {{instrument.id}}>{{instrument.instrument}}</option>
+              {% endfor %}
+              <div class="invalid-feedback">
+                Please select instrument.
+              </div>
+            </select>
+          </td>
 
+              <td>
+            <select class="custom-select d-block w-100" name="instructor" id="instructor">
+              <option value="">Select Teacher</option>
+              {% for teacher in teachers %}
+              <option value = {{teacher.id}}>{{teacher.name}}</option>
+              {% endfor %}
+              <div class="invalid-feedback">
+                Please select teacher.
+              </div>
+            </select>
+          </td>
+        </tr>
+          </table>
+          </div>
+        </div>
     </main><!-- /.container -->
   </section>
     <!-- Bootstrap core JavaScript

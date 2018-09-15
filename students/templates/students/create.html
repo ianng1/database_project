@@ -2,6 +2,12 @@
 {% block content %}
 <!doctype html>
 
+<script>
+$( function(){
+  $("#birthday").datepicker({ dateFormat: 'yy-mm-dd'});
+})
+</script>
+
     <main role="main" class="container">
 <h1>Create Student</h1>
 <form class="needs-validation" novalidate method = "POST" action = "{% url 'create' %}" enctype = "multipart/form-data">
