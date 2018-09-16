@@ -129,3 +129,9 @@ STATIC_URL = '/static/'
 
 SESSION_COOKIE_AGE = 3600
 SESSION_SAVE_EVERY_REQUEST = True
+
+
+try:
+    from .local_settings import *
+except ImportError:
+     pass
