@@ -126,7 +126,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "carols_database/static")
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
-]
+
 LOGIN_REDIRECT_URL = '/'
 STATIC_URL = '/static/'
 
