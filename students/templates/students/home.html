@@ -5,15 +5,13 @@
 <body>
     <main role="main" class="container">
       <div class="container">
-        <h1 class="jumbotron-heading">Search Student Name</h1>
+        <h3 class="jh3 mb-3 font-weight-normal">Search Student Name</h3>
       </div>
 
       <form method = "POST" action = "{% url 'home' %}" enctype = "multipart/form-data">
       {% csrf_token %}
 
-      <br />
       <input class="form-control form-control-dark w-100" type="text" name = "namequery" autocomplete="off"/>
-      <br />
         <input class="btn btn-primary my-2" type="submit" value="Search">
         <button class="btn btn-secondary my-2" type="button" data-toggle="collapse" data-target="#advancesearch" aria-expanded="false" aria-controls="dvancesearch">
           More Search Options
