@@ -147,65 +147,6 @@ $( function(){
 </form>
 
 <br />
-<div class="table-responsive">
-   <table class="table table-striped table-sm">
-     <thead>
-       <tr>
-         <th>Instrument</th>
-         <th>Instructor</th>
-         <th>Action</th>
-        </tr>
-     </thead>
-
-     <tbody>
-
-     {% if studentinstruments %}
-     {% for studentinstrument in studentinstruments %}
-       <tr>
-         <td> {{studentinstrument.instrument.instrument}} </td>
-         <td> {{studentinstrument.teacher.name}} </td>
-         <td>
-           <form action={% url 'delitem' %} method="POST" enctype="multipart/form-data">
-             {% csrf_token %}
-             <input type="hidden" name="studentinstrument_id" value="{{studentinstrument.id}}" />
-             <input type="hidden" name="student_id" value="{{studentinstrument.student.id}}" />
-             <input class="btn btn-sm btn-outline-secondary" type="submit" value="Delete">
-           </form>
-         </td>
-        </tr>
-     {%endfor%}
-     {%endif%}
-
-     <form action={% url 'additem' %} method="POST">
-       {% csrf_token %}
-     <tr>
-       <td>
-         <select class="custom-select d-block w-100" name="instrument" id="instrument">
-           <option value="">Choose...</option>
-           {% for instrument in instrument_name %}
-           <option value = "{{instrument.instrument}}">{{instrument.instrument}}</option>
-           {% endfor %}
-        </select>
-      </td>
-
-        <td>
-        <select class="custom-select d-block w-100" name="teacher" id="teacher">
-          <option value="">Choose...</option>
-          {% for teacher in teacher_name %}
-          <option value = "{{teacher.name}}">{{teacher.name}}</option>
-          {% endfor %}
-        </select>
-      </td>
-
-      <td>
-          <input type="hidden" name="student_id" value="{{student.id}}" />
-          <input class="btn btn-sm btn-outline-secondary" type="submit" value="Add">
-      </td>
-    </tr>
-    </form>
-
- </tbody>
-   </table>
 
 </main>
 
