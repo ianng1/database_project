@@ -63,25 +63,25 @@ $("#student, #save").submit(function(event){
   event.preventDefault();
 });
 
-$("#studentinstruments, #delitem").submit(function(event){
-  var formData = {
-    'studentinstrument_id'        : $('#studentinstrument_id').val(),
-    'student_id'                  : $('#student_id').val(),
-  };
-  ajaxSetup();
-  $.ajax({
-    type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
-    url         : '{% url 'delitem' %}', // the url where we want to POST
-    data        : formData, // our data object
-    dataType    : 'json', // what type of data do we expect back from the server
-    encode       : true,
-    success: function (data) {
-       if (data) {
-         refreshform();
-       }},
-  });
-  event.preventDefault();
-})
+// $("#studentinstruments, #delitem").submit(function(event){
+//   var formData = {
+//     'studentinstrument_id'        : $('#studentinstrument_id').val(),
+//     'student_id'                  : $('#student_id').val(),
+//   };
+//   ajaxSetup();
+//   $.ajax({
+//     type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+//     url         : '{% url 'delitem' %}', // the url where we want to POST
+//     data        : formData, // our data object
+//     dataType    : 'json', // what type of data do we expect back from the server
+//     encode       : true,
+//     success: function (data) {
+//        if (data) {
+//          refreshform();
+//        }},
+//   });
+//   event.preventDefault();
+// })
 
 $("#addinstrument, #additem").submit(function(event){
 
@@ -150,11 +150,12 @@ function refreshform(){
          for(i = 0; i < studentinstrument.length; i++ ){
            str = '<tr><td>' + studentinstrument[i].instrument + '</td>';
            str += '<td>' + studentinstrument[i].teacher_name + '</td>';
-           str += '<td><form action=/students/delitem method="POST" enctype="multipart/form-data" >'
-           str += '<input type="hidden" name="studentinstrument_id" id="studentinstrument_id" value="'+ studentinstrument[i].studentinstrument_id + '" />'
-           str += '<input type="hidden" name="student_id" value=" id="student_id"' + studentinstrument[i].student_id + '" />'
-           str += '<input class="btn btn-sm btn-outline-secondary" id="delete" type="submit" value="Delete">'
-           str += '</form></td><tr>'
+           // str += '<td><form action=/students/delitem method="POST" enctype="multipart/form-data" >'
+           // str += '<input type="hidden" name="studentinstrument_id" id="studentinstrument_id" value="'+ studentinstrument[i].studentinstrument_id + '" />'
+           // str += '<input type="hidden" name="student_id" value=" id="student_id"' + studentinstrument[i].student_id + '" />'
+           // str += '<input class="btn btn-sm btn-outline-secondary" id="delete" type="submit" value="Delete">'
+           // str += '</form></td><tr>'
+           str += '<td><button class="btn btn-sm btn-outline-secondary" type="button" value="' + studentinstrument[i].studentinstrument_id + '" onclick="delitem(this)">Delete</button></td></tr>';
          $('#studentinstruments').append(str);
 
          $("#addinstrument, #additem, #instrument").val("");
@@ -189,6 +190,24 @@ function ajaxSetup(){
     }
   });
 }
+function delitem(element)
+{
+  var formData = {
+    'studentinstrument_id'        : element.value,
+  };
+  ajaxSetup();
+  $.ajax({
+    type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+    url         : '{% url 'delitem' %}', // the url where we want to POST
+    data        : formData, // our data object
+    dataType    : 'json', // what type of data do we expect back from the server
+    encode       : true,
+    success: function (data) {
+       if (data) {
+         refreshform();
+       }},
+  });
+};
 </script>
 <script>
 $( function(){
@@ -362,12 +381,13 @@ $( function(){
          <td> {{studentinstrument.instrument.instrument}} </td>
          <td> {{studentinstrument.teacher.name}} </td>
          <td>
-           <form action={% url 'delitem' %} method="POST" enctype="multipart/form-data" >
+           <!-- <form action={% url 'delitem' %} method="POST" enctype="multipart/form-data" >
              {% csrf_token %}
              <input type="hidden" name="studentinstrument_id" id="studentinstrument_id" value="{{studentinstrument.id}}" />
              <input type="hidden" name="student_id" id="student_id" value="{{studentinstrument.student.id}}" />
              <input class="btn btn-sm btn-outline-secondary" id="delitem" type="submit" value="Delete">
-           </form>
+           </form> -->
+           <button class="btn btn-sm btn-outline-secondary" type="button" value="{{studentinstrument.id}}" onclick="delitem(this)">Delete</button>
          </td>
         </tr>
      {%endfor%}
