@@ -150,8 +150,6 @@ def refresh(request):
 
 @login_required
 def delitem(request):
-    # if request.POST['student_id']:
-    #     student = get_object_or_404(Student, pk=request.POST['student_id'])
     if  request.POST['studentinstrument_id']:
         studentinstrument = get_object_or_404(StudentInstrument, pk=request.POST['studentinstrument_id'])
         student = studentinstrument.student
