@@ -24,4 +24,6 @@ urlpatterns = [
     path('students/delitem', students.views.delitem, name='delitem'),
     path('students/additem', students.views.additem, name='additem'),
     path('refresh', students.views.refresh, name='refresh'),
+    path('register', students.views.register, name = 'register'),
+    path('delete', students.views.delete, name = "delete"),
 ]

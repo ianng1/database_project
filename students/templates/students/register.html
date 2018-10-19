@@ -8,11 +8,17 @@ $( function(){
   $("#date_enrolled").datepicker({ dateFormat: 'yy-mm-dd'});
 })
 
+
+function enableBtn() {
+  document.getElementById("register").disabled = false;
+}
 </script>
 
+
+
     <main role="main" class="container">
-<h1>Create Student</h1>
-<form class="needs-validation" novalidate method = "POST" action = "{% url 'create' %}" enctype = "multipart/form-data">
+<h1>Register Student</h1>
+<form class="needs-validation" novalidate method = "POST" action = "{% url 'register' %}" enctype = "multipart/form-data">
 {% csrf_token %}
 <input type="text" name="ID" value= "" hidden/>
 
@@ -145,32 +151,19 @@ $( function(){
 </div>
 
 <div class="">
-  <label class="my-0" for="comment">Comment</label>
+  <label class="my-0" for="comment">Comment (e.g. Interested instruments, instructors)</label>
   <textarea rows="4" cols="50" class="form-control form-control-sm" id="comment" name="comment"></textarea>
 </div>
 
 </br>
 
-
-<div class="row">
-  <div class="col-md-3 mb-3">
-    <label class="my-0" for="date_enrolled">Date Enrolled</label>
-    <input class="form-control form-control-sm" type="date" id="date_enrolled" name="date_enrolled" value=""/>
-    <div class="invalid-feedback">
-      Enrollment date is required.
-    </div>
-  </div>
-</div>
-
-
-
-
-
-
-<input class="btn btn-primary" type = "submit" value = "Save"/>
+<script src='https://www.google.com/recaptcha/api.js'></script>
+   <div class="g-recaptcha" data-sitekey="6LdPBXUUAAAAAJw1oErDsFXqYzZa0Xm1mh_Of44G" data-callback="enableBtn"> </div>
+<br />
+<input class="btn btn-primary" id = "register" type = "submit" value = "Register" disabled/>
 </form>
 
-<br />
+
 
 </main>
 

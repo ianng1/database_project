@@ -24,7 +24,21 @@ $('#edit').on('click',function(){
   }
 });
 
-$("#student, #save").submit(function(event){
+$('#todelete').on('click',function(){
+    $("#delete").removeAttr("hidden");
+    $("#canceldelete").removeAttr("hidden");
+    $("#todelete").attr("hidden", "hidden");
+});
+
+$('#canceldelete').on('click',function(){
+    $("#delete").attr("hidden", "hidden");
+    $("#canceldelete").attr("hidden", "hidden");
+    $("#todelete").removeAttr("hidden");
+});
+
+
+//$("#student, #save").submit(function(event){
+$("#save").on('click',function(){
   var formData = {
     'ID'        : $('#ID').val(),
     'first name' : $('#firstname').val(),
@@ -43,6 +57,7 @@ $("#student, #save").submit(function(event){
     'city'     : $('#city').val(),
     'zipcode'     : $('#zipcode').val(),
     'comment'     : $('#comment').val(),
+    'date_enrolled' : $('#date_enrolled').val(),
   };
   ajaxSetup();
 
@@ -62,6 +77,31 @@ $("#student, #save").submit(function(event){
   });
   event.preventDefault();
 });
+
+/*
+$("#student, #delete").submit(function(event){
+  var formData = {
+    'ID'        : $('#ID').val(),
+  };
+  ajaxSetup();
+
+  $.ajax({
+    type        : 'POST', // define the type of HTTP verb we want to use (POST for our form)
+    url         : '{% url 'delete' %}', // the url where we want to POST
+    data        : formData, // our data object
+    dataType    : 'json', // what type of data do we expect back from the server
+    encode       : true,
+    success: function (data) {
+       if (data) {
+         refreshform();
+         $(".form-control").attr("disabled", "disabled");
+         $("#edit").val("Edit");
+         $("#save").attr("hidden", "hidden");
+       }},
+  });
+  event.preventDefault();
+});
+*/
 
 // $("#studentinstruments, #delitem").submit(function(event){
 //   var formData = {
@@ -139,6 +179,7 @@ function refreshform(){
          $('#city').val(jsonparsed.city);
          $('#zipcode').val(jsonparsed.zipcode);
          $('#comment').val(jsonparsed.comment);
+         $('#date_enrolled').val(jsonparsed.date_enrolled);
 
          var studentinstrument = data[0].studentinstrumentlist;
          var jsonparsedteacher = JSON.parse(data[0].teachers);
@@ -212,6 +253,7 @@ function delitem(element)
 <script>
 $( function(){
   $("#birthday").datepicker({ dateFormat: 'yy-mm-dd'});
+  $("#date_enrolled").datepicker({ dateFormat: 'yy-mm-dd'});
 })
 </script>
 {{student_id}}
@@ -354,14 +396,38 @@ $( function(){
   <textarea rows="4" cols="50" class="form-control form-control-sm" id="comment" name="comment" disabled>{{ student.comment }}</textarea>
 </div>
 
+</br>
+
+
+<div class="row">
+  <div class="col-md-3 mb-3">
+    <label class="my-0" for="date_enrolled">Date Enrolled</label>
+    <input class="form-control form-control-sm" type="date" id="date_enrolled" name="date_enrolled" value="{{ student.date_enrolled|date:'Y-m-d' }}" disabled/>
+    <div class="invalid-feedback">
+      Enrollment date is required.
+    </div>
+  </div>
+</div>
 
 <div class="row">
 
 </div>
-<input class="btn btn-primary my-2" id="save" type = "submit" value = "Save" hidden/>
-<input class="btn btn-primary my-2" id="edit" type = "button" value = "Edit"/>
 </form>
-
+<div class="row">
+<div class="col-md-6 mb-3">
+  <input class="btn btn-primary my-2" id="save" type = "button" value = "Save" hidden/>
+  <input class="btn btn-primary my-2" id="edit" type = "button" value = "Edit"/>
+</div>
+<div class="col-md-6 mb-3">
+<form class="needs-validation" novalidate  method = "POST" action = "{% url 'delete' %}" enctype = "multipart/form-data">
+{% csrf_token %}
+  <input type="text" name="ID" id="ID" value="{{ student.id }}" hidden/>
+  <input class="btn btn-danger" id="todelete" type = "button" value = "Delete"/>
+  <input class="btn btn-success" id="canceldelete" type = "button" value = "Cancel" hidden/>
+  <input class="btn btn-danger" id="delete" type = "submit" value = "Confirm" hidden/>
+</form>
+</div>
+</div>
 <br />
 <div class="table-responsive">
    <table class="table table-sm">
@@ -428,6 +494,8 @@ $( function(){
           <input type="hidden" name="student_id" value="{{student.id}}" id="student_id"/>
           <input class="btn btn-sm btn-outline-secondary" id="add" type="submit" value="Add">
       </td>
+
+
     </tr>
     </form>
 

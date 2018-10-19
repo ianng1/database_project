@@ -3,7 +3,9 @@ from .models import Student, Teacher, Instrument, StudentInstrument
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.core import serializers
+from django.conf import settings
 import json
+import urllib
 
 
 
@@ -34,6 +36,7 @@ def create(request):
             student.zipcode = request.POST['zipcode']
             # student.level = request.POST['enrolled']
             student.comment = request.POST['comment']
+            student.date_enrolled = request.POST['date_enrolled']
             student.full_name = student.first_name + " " + student.last_name
             student.parent_full_name = student.parent_first_name + " " + student.parent_last_name
             student.save()
@@ -108,6 +111,7 @@ def data(request, student_id):
             student.zipcode = request.POST['zipcode']
             # student.enrolled = request.POST['enrolled']
             student.comment = request.POST['comment']
+            student.date_enrolled = request.POST['date_enrolled']
             student.full_name = student.first_name + " " + student.last_name
             student.parent_full_name = student.parent_first_name + " " + student.parent_last_name
             student.save()
@@ -181,3 +185,69 @@ def additem(request):
             return HttpResponse(json.dumps(data), content_type="application/json")
         else:
             return redirect('/data/' + str(student.id))
+
+
+def register(request):
+    if request.method == 'POST':
+
+        recaptcha_response = request.POST.get('g-recaptcha-response')
+        url = 'https://www.google.com/recaptcha/api/siteverify'
+        values = {
+            'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+            'response': recaptcha_response
+        }
+        data = urllib.parse.urlencode(values).encode()
+        req =  urllib.request.Request(url, data=data)
+        response = urllib.request.urlopen(req)
+        result = json.loads(response.read().decode())
+        ''' End reCAPTCHA validation '''
+
+        if result['success']:
+
+
+
+            student = Student()
+            if request.POST['first name'] and request.POST['last name'] and request.POST['parent first name'] and request.POST['parent last name'] and request.POST['birthday'] and request.POST['email']:
+                student.first_name = request.POST['first name']
+                student.last_name = request.POST['last name']
+                student.parent_first_name = request.POST['parent first name']
+                student.parent_last_name = request.POST['parent last name']
+                student.birthday = request.POST['birthday']
+                student.email = request.POST['email']
+                student.parent_email = request.POST['parent email']
+                student.phone_number = request.POST['phone number']
+                student.parent_phone_number = request.POST['parent phone number']
+                student.level = request.POST['level']
+                student.school = request.POST['school']
+                student.street = request.POST['street']
+                student.street2 = request.POST['street2']
+                student.city = request.POST['city']
+                student.zipcode = request.POST['zipcode']
+                # student.level = request.POST['enrolled']
+                student.comment = request.POST['comment']
+                student.full_name = student.first_name + " " + student.last_name
+                student.parent_full_name = student.parent_first_name + " " + student.parent_last_name
+                student.save()
+                return render(request, 'students/register_complete.html')
+            else:
+                return render(request, 'students/register.html', {'error': 'Did not fill in all fields'})
+        else:
+            return render(request, 'students/register.html', {'error': 'Did not complete reCAPTCHA'})
+
+    else:
+        return render(request, 'students/register.html')
+
+
+
+
+
+@login_required
+def delete(request):
+    print(request.POST['ID'])
+    if request.method == 'POST':
+
+        if request.POST['ID']:
+            student = get_object_or_404(Student, pk = request.POST['ID'])
+        if student:
+            student.delete()
+            return render(request, 'students/home.html')

@@ -19,7 +19,7 @@ class Student(models.Model):
     level = models.CharField(default="", max_length = 3)
     full_name = models.CharField(default="", max_length = 80)
     parent_full_name = models.CharField(default="", max_length = 80)
-    enrolled = models.BooleanField(default=False)
+    date_enrolled = models.DateField(null=True)
     comment = models.TextField(default="")
 
     def get_absolute_url(self):
