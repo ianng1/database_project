@@ -33,8 +33,8 @@ EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_USE_TLS = False
-DEFAULT_FROM_EMAIL = 'Admin <admin@pacificinstituteofmusic.tk>'
-DEFAULT_TO_EMAIL = 'pengwah@gmail.com'
+DEFAULT_FROM_EMAIL = 'Admin <someemail@somedomain.com>'
+DEFAULT_TO_EMAIL = 'someemail@somedomain.com'
 # Application definition
 
 INSTALLED_APPS = [
