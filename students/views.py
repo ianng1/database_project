@@ -228,7 +228,7 @@ def register(request):
                 student.full_name = student.first_name + " " + student.last_name
                 student.parent_full_name = student.parent_first_name + " " + student.parent_last_name
                 student.save()
-                subject = 'New student registration - + ' ' + student.first_name + ' ' + student.last_name
+                subject = 'New student registration -' + ' ' + student.first_name + ' ' + student.last_name
                 send_mail(subject, '', '', [settings.DEFAULT_TO_EMAIL], fail_silently=True)
                 return render(request, 'students/register_complete.html')
 
