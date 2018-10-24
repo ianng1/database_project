@@ -1,9 +1,11 @@
+
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Student, Teacher, Instrument, StudentInstrument
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.core import serializers
 from django.conf import settings
+from django.core.mail import send_mail
 import json
 import urllib
 
@@ -204,10 +206,8 @@ def register(request):
 
         if result['success']:
 
-
-
             student = Student()
-            if request.POST['first name'] and request.POST['last name'] and request.POST['parent first name'] and request.POST['parent last name'] and request.POST['birthday'] and request.POST['email']:
+            if request.POST['first name'] and request.POST['last name'] and request.POST['birthday'] and request.POST['email']:
                 student.first_name = request.POST['first name']
                 student.last_name = request.POST['last name']
                 student.parent_first_name = request.POST['parent first name']
@@ -228,7 +228,10 @@ def register(request):
                 student.full_name = student.first_name + " " + student.last_name
                 student.parent_full_name = student.parent_first_name + " " + student.parent_last_name
                 student.save()
+                subject = 'New student registration ' + ' ' + student.first_name + ' ' + student.last_name
+                send_mail(subject, '', 'admin@pacificinstituteofmusic.tk', ['pengwah@gmail.com'], fail_silently=True)
                 return render(request, 'students/register_complete.html')
+
             else:
                 return render(request, 'students/register.html', {'error': 'Did not fill in all fields'})
         else:
@@ -236,9 +239,6 @@ def register(request):
 
     else:
         return render(request, 'students/register.html')
-
-
-
 
 
 @login_required
