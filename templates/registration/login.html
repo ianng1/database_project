@@ -8,7 +8,7 @@
   <body class="text-center">
     <form class="form-signin" method="post" action="{% url 'login' %}">
         {% csrf_token %}
-      <h3 class="h5 mb-3 font-weight-normal">Please sign in</h3>
+      <h3 class="h5 mb-3 font-weight-normal">Please sign in.</h3>
 
       <div class="h5 mb-3 font-weight-normal">
         <td class="form-control">{{ form.username.label_tag }}</td>
@@ -25,6 +25,18 @@
       <p class="mt-5 mb-3 text-muted">&copy; 2017-2018</p>
     </form>
   </body>
+
+  <b><font size = "6"> OR </font> </b>
+  <br>
+  <br>
+  <body class="text-center">
+    <a class="btn btn-primary" href="/register">Register a new student</a>
+
+  </body>
+
+
+
+
 </section>
 </html>
 {% endblock %}
