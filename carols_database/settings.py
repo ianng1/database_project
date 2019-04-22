@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'carols_database.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'studentsdb',
+        'NAME': 'students_database',
         'USER': 'postgres',
         'PASSWORD': 'Genius1289',
         'HOST': 'localhost',
